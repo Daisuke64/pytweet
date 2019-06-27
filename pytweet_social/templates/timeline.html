@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+{{ super() }}
+
+<link rel="stylesheet" href="{{url_for('static', filename='stylesheet/auth.css')}}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+  integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='stylesheet/new.css') }}">
+<script src="https://kit.fontawesome.com/57123efb1f.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='javascript/favorite.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='javascript/retweet.js') }}"></script>
+{% endblock %}
+
+{% block subcontent %}
+<div class="row">
+  <div class="col-4">
+    <div class="card">
+      <img class="card-img-top" src="img_avatar1.png" alt="Card image">
+      <div class="card-body">
+        <h4 class="card-title">{{ current_user.firstname }} {{ current_user.lastname }}</h4>
+        <p class="card-text">@{{ current_user.screen_name }}</p>
+        <div class="row">
+          <div class="col-4">
+            <h4>Tweets</h4>
+            {{ tweets_total}}
+          </div>
+          <div class="col-4">
+            <h4>Following</h4>
+            {{ following }}
+          </div>
+          <div class="col-4">
+            <h4>Followers</h4>
+            {{ followers }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-8">
+    <div class="card">
+      <div class="card-header bg-info text-light">
+        <form method="POST">
+          <h3>Tweet</h3>
+          {{ form.hidden_tag() }}
+          {{ wtf.form_field(form.body) }}
+          <button class="btn btn-dark" type="submit">Tweet</button>
+        </form>
+      </div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for pytweet in pytweets | sort(attribute='updated_at', reverse=True) %}
+          <li class="list-group-item">
+              <a href="/{{ pytweet.user.screen_name }}/{{ pytweet.user.id }}/profile" class="text-decoration-none"><h5>@{{ pytweet.user.firstname }} {{ pytweet.user.lastname }} <span class="text-muted" style="font-size: 12px;">@{{ pytweet.user.screen_name }}</span></h5></a>
+              <p>{{ pytweet.body | safe }}</p>
+              <a href="/pytweets/{{ pytweet.id }}/comment/" class="btn btn-info" role="button"><i class="fas fa-comment"></i></a>
+              {% if pytweet.liked_by(current_user) %}
+                <button class="btn btn-link text-danger text-decoration-none" id="like-btn-{{ pytweet.id }}" onclick="toggle_like({{ pytweet.id }})">
+                  <i class="fas fa-heart" id="heart-{{ pytweet.id }}"></i>
+                  <span id="like-{{ pytweet.id }}">{{ pytweet.likes(pytweet_id=pytweet.id) }}</span>
+                </button>
+              {% else %}
+                <button class="btn btn-link text-dark text-decoration-none" id="like-btn-{{ pytweet.id }}" onclick="toggle_like({{ pytweet.id }})">
+                  <i class="fas fa-heart-broken" id="heart-{{ pytweet.id }}"></i>
+                  <span id="like-{{ pytweet.id }}">{{ pytweet.likes(pytweet_id=pytweet.id) }}</span>
+                </button>
+              {% endif %}
+              {% if pytweet.retweeted_by(current_user) %}
+              <button class="btn btn-link text-success text-decoration-none" id="retweet-btn-{{ pytweet.id }}" onclick="toggle_retweet({{ pytweet.id }})">
+                <i class="fas fa-retweet"></i>
+                <span id="retweet-{{ pytweet.id }}">{{ pytweet.retweet_count(pytweet_id=pytweet.id) }}</span>
+              </button>
+              {% else %}
+                <button class="btn btn-link text-dark text-decoration-none" id="retweet-btn-{{ pytweet.id }}" onclick="toggle_retweet({{ pytweet.id }})">
+                  <i class="fas fa-retweet"></i>
+                  <span id="retweet-{{ pytweet.id }}">{{ pytweet.retweet_count(pytweet_id=pytweet.id) }}</span>
+                </button>
+              {% endif %}
+              {% if pytweet.user == current_user %}
+              <form action="pytweet/{{ pytweet.id }}/delete/" method="POST" class="d-inline">
+              <a href="pytweets/{{ pytweet.id }}/edit/" class="btn btn-primary" role="button"><i class="fas fa-edit"></i></a>
+              <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
+              </form>
+              {% endif %}
+          </li>
+          {% else %}
+          <li class="list-group-item">No tweets to show</li>
+          {% endfor %}
+        </ul>
+        
+      </div>
+
+    </div>
+  </div>
+
+
+</div>
+
+{% endblock %}

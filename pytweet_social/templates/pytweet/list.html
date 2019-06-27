@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+
+{% block subcontent %}
+
+  <a href="/pywteets/new"><button class="btn btn-lg btn-primary btn-block">Pytweetを作成</button></a>
+
+  <ul class=pytweets>
+  {% for pytweet in pytweets %}
+      <li>
+          <a href="pytweets/{{ pytweet.id }}/edit">
+              <h3>@{{ pytweet.user.screen_name }}</h3>
+              <div>{{ pytweet.body|safe }}</div>
+          </a>
+      </li>
+
+  {% else %}
+    <li><em>まだPytweetの投稿はありません</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% for sub in subcomments %}
+<li class="list-group-item">
+    <a href="">{{ sub.subcommenters.firstname }} {{ sub.subcommenters.lastname }}</a>
+    <p>{{ sub.subcomment }}</p>
+</li>
+{% else %}
+<li class="list-group-item">
+    <p>No comments to show</p>
+</li>
+{% endfor %}

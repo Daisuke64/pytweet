@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+  {{ super() }}
+
+  <link rel="stylesheet" href="{{url_for('static', filename='stylesheet/auth.css')}}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"crossorigin="anonymous">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='stylesheet/new.css') }}">
+{% endblock %}
+
+{% block subcontent %}
+  <form class="form-pytweet" method="POST" action="/timeline">
+    <h2 class="form-auth-heading">さえずろう</h2>
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.body) }}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Pytweet!</button>
+  </form>
+
+  <ul class=pytweets>
+  {% for pytweet in pytweets %}
+  <li>
+    <div class="pytweet-card card-style">
+
+      <div class="card-header row">
+        <div class="col-auto">
+          <div class="avatar">
+            <a href="/users/{{ pytweet.user.id }}">
+              <img src="{{ pytweet.user.avatar_url or "/static/img/sample_avatar.png" }}" alt="画像" width="36" height="36">
+            </a>
+          </div>
+        </div>
+        <div class="col">
+          <a href="/users/{{ pytweet.user.id }}">
+            <div class="title">@{{ pytweet.user.screen_name }}</div>
+          </a>
+        </div>
+      
+
+
+        <div class="card-body">
+          <a href="/pytweets/{{ pytweet.id }}">
+            <div class="card-content">
+              <p>{{ pytweet.body|safe }}</p>
+            </div>
+          </a>
+        </div>
+
+
+      </div>
+
+    </div>
+  </li>
+
+
+  {% else %}
+    <li><em>まだPytweetの投稿はありません</em>
+  {% endfor %}
+  </ul>
+{% endblock %}

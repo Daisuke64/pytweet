@@ -1,0 +1,48 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+  Pytweet Social
+{% endblock %}
+
+{% block styles %}
+  {{super()}}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='stylesheet/style.css') }}">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='stylesheet/index.css') }}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel=stylesheet  href="{{ url_for('static', filename='new.css') }}">
+{% endblock %}
+
+<body>
+{% block content %}
+  {{ super() }}
+  <nav class="navbar navbar-expand navbar-light bg-light">
+    <ul class="navbar-nav ml-3">
+        <li class="nav-item">
+            <a  class="nav-link"  href="/timeline" >Timeline</a>
+          </li>
+      <li class="nav-item">
+        <a  class="nav-link"  href="/users/search" >Search</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/users/me">User</a>
+      </li>  
+      <li class="nav-item">
+          <a  class="nav-link" href="/login">Logout</a>
+      </li>
+    </ul>
+</nav>
+
+  <div class="container">
+
+    <h1>PyTweet Social</h1>
+
+    {% for message in get_flashed_messages() %}
+      <div class=flash>{{ message }}</div>
+    {% endfor %}
+
+    {% block subcontent %}{% endblock %}
+
+  </div>
+{% endblock %}
+</body>
+

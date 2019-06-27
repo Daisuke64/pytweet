@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block subcontent %}
+  <div class="col-4">
+  <h2>{{ 'Edit user' if user else 'Create new user'}}</h2>
+  <form action="" method="post" enctype="multipart/form-data">
+    <dl>
+      <dt>Username:</dt>
+      <dd><input class = "form-control" type=text size=20 name=screen_name value="{{ user.screen_name if user }}"></dd>
+      <dt>Email:</dt>
+      <dd><input class = "form-control" type=text size=40 name=email value="{{ user.email if user }}"></dd>
+      <dt>Bio:</dt>
+      <dd><textarea class = "form-control" name=bio cols="30" rows="5">{{ user.bio if user }}</textarea></dd>
+      <dt>Avatar:</dt>
+      <dd>
+        <input class = "file" type=file name=avatar id=avatar>
+        {% if user %}
+          <h3>既存のAvatar</h3>
+          {% if user.avatar_url %}
+            <img src={{ "../{}".format(user.avatar_url) }} alt="プレビュー画像">
+
+          {% else %}
+            <span>なし</span>
+          {% endif %}
+        {% endif %}
+      </dd>
+
+      <dd><input class = "btn btn-primary" type=submit value={{ 'save' if user else 'create' }}>
+    </dl>
+  </form>
+</div>
+{% endblock %}

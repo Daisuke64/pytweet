@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+  {{ super() }}
+
+  <link rel="stylesheet" href="{{url_for('static', filename='stylesheet/auth.css')}}">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"crossorigin="anonymous">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='stylesheet/new.css') }}">
+  <script type="text/javascript" src="{{ url_for('static', filename='javascript/friendship.js') }}"></script>
+{% endblock %}
+
+{% block subcontent %}
+<div class="row justify-content-center">
+    <div class="col-10">
+    <div class="card mt-5">
+        <div class="card-header bg-info">
+            <form action="/users/search" method="post">
+                {{ form.hidden_tag() }}
+                {{ wtf.form_field(form.keyword) }}
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                {% for result in results %}
+                    <div class="row">
+                        <div class="col-8">
+                            <p class="lead">@{{ result.screen_name }}</p>
+                        </div>
+                        <div class="col-4">
+                            {% if result != current_user %}
+                                {% if result.was_followed_by(current_user) %}
+                                <button id='follow-btn-{{ result.id }}' class="btn btn-outline-info" onclick="toggle_friendship({{ result.id }});">Following</button>
+                                {% else %}
+                                <button id='follow-btn-{{ result.id }}' class="btn btn-info" onclick="toggle_friendship({{ result.id }});">Follow</button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="lead">Sorry, we can't find what you are looking for</p>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}

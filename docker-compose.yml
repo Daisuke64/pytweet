@@ -1,0 +1,40 @@
+version: "3.3"
+
+services:
+  app:
+    restart: always
+    build: .
+    command: flask run --host 0.0.0.0 --port 5000
+    tty: true
+    volumes:
+      - .:/var/www/pytweet
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      FLASK_APP: run.py
+      FLASK_ENV: development
+
+  db:
+    restart: always
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: docker_mysql2
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/db/data:/var/lib/mysql
+    env_file:
+      - .env
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    env_file:
+      - .env
+    ports:
+      - 80:80
+    depends_on:
+      - db

@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block subcontent %}
+  <h2>{{ 'Edit pytweet' if pytweet else 'Create new pytweet'}}</h2>
+  <form class="form-pytweet" method="POST" action="{{ '/pytweets/{}/edit/'.format(pytweet.id) if pytweet else '/pytweets/new/' }}">
+    <h2 class="form-auth-heading">さえずろう</h2>
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.body) }}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Pytweet!</button>
+  </form>
+{% endblock %}

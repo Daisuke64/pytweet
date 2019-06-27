@@ -1,0 +1,37 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+Sign Up
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('static', filename='stylesheet/auth.css')}}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel=stylesheet  href="{{ url_for('static', filename='new.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand navbar-light bg-light">
+  <ul class="navbar-nav ml-3">
+    <li class="nav-item">
+        <a  class="nav-link" href="/register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a  class="nav-link" href="/login">Login</a>
+    </li>
+  </ul>
+</nav>
+<div class="container">
+
+  <form class="form-auth" method="POST" action="/register">
+    <h2 class="form-auth-heading">Register</h2>
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.screen_name) }}
+    {{ wtf.form_field(form.email) }}
+    {{ wtf.form_field(form.password) }}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+  </form>
+</div> <!-- /container -->
+{% endblock %}

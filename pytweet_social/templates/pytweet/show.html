@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block subcontent %}
+  <h2>Pytweet詳細</h2>
+  <form action="" method="post">
+    <dl>
+      <dt>Author</dt>
+      <dd>@{{ pytweet.user.screen_name }}</dd>
+      <dt>Body:</dt>
+      <dd>{{ pytweet.body if pytweet }}</dd>
+      <dt>Created at:</dt>
+      <dd>{{ pytweet.created_at if pytweet }}</dd>
+      <dt>Updated at:</dt>
+      <dd>{{ pytweet.updated_at if pytweet }}</dd>
+
+      <dd><input class = "btn btn-primary btn-lg" type=submit value={{ 'save' if user else 'create' }}>
+    </dl>
+  </form>
+{% endblock %}
