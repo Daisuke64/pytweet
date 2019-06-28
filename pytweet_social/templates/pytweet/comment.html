@@ -53,8 +53,8 @@
         </button>
         {% endif %}
         {% if pytweet.user == current_user %}
-        <form action="pytweet/{{ pytweet.id }}/delete/" method="POST" class="d-inline">
-          <a href="pytweets/{{ pytweet.id }}/edit/" class="btn btn-primary" role="button"><i
+        <form action="/pytweet/{{ pytweet.id }}/delete/" method="POST" class="d-inline">
+          <a href="/pytweets/{{ pytweet.id }}/edit/" class="btn btn-primary" role="button"><i
               class="fas fa-edit"></i></a>
           <button class="btn btn-danger" type="submit"><i class="fas fa-trash"></i></button>
         </form>
@@ -76,6 +76,7 @@
                 <p id="comment-{{ comment.id }}" class="">{{ comment.comment | safe }}</p>
                 <input type="text" id="edit-comment-{{ comment.id }}" value="{{ comment.comment }}" class="d-none form-control"  onkeypress="if(event.which == 13) save_edit({{ comment.id }})">
                 <button class="btn btn-link text-info text-decoration-none" id="edit-comment-btn-{{ comment.id }}" onclick="edit_comment({{ comment.id }})"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-link text-danger text-decoration-none" id="delete-comment-btn-{{ comment.id }}" onclick="delete_comment({{ comment.id }})"><i class="fas fa-trash"></i></button>
                 {% if comment.comment_liked_by(current_user) %}
                 <button class="btn btn-link text-danger text-decoration-none" id="like-comment-btn-{{ comment.id }}"
                   onclick="toggle_comment_like({{ comment.id }})">

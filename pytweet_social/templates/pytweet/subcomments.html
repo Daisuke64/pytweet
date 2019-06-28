@@ -1,10 +1,15 @@
+<ul class="list-group list-group-flush comment-section-sub">
 {% for sub in subcomments %}
 <li class="list-group-item">
     <a href="">{{ sub.subcommenters.firstname }} {{ sub.subcommenters.lastname }}</a>
-    <p>{{ sub.subcomment }}</p>
+    <p id="subcomment-{{ sub.id }}" class="">{{ sub.subcomment }}</p>
+    <input type="text" id="edit-subcomment-{{ sub.id }}" value="{{ sub.subcomment }}" class="d-none form-control"  onkeypress="if(event.which == 13) save_edit_sub({{ sub.id }})">
+    <button class="btn btn-link text-info text-decoration-none" id="edit-comment-btn-{{ sub.id }}" onclick="edit_subcomment({{ sub.id }})"><i class="fas fa-edit"></i></button>
+    <button class="btn btn-link text-danger text-decoration-none" id="delete-subcomment-btn-{{ sub.id }}" onclick="delete_sub({{ sub.id }})"><i class="fas fa-trash"></i></button>
 </li>
 {% else %}
 <li class="list-group-item">
     <p>No comments to show</p>
 </li>
 {% endfor %}
+</ul>

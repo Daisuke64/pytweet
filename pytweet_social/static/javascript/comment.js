@@ -11,6 +11,16 @@ function add_comment(id){
     })
 }
 
+function delete_comment(id){
+    $.ajax({
+        type:"POST",
+        url: "/comment/" + id + "/delete/",
+    }).done( function(data){
+        $(".comment-section").html(data)
+        console.log(data)
+    })
+}
+
 function toggle_comment_like(id){
     const like_id = '#heart-comment-' + id
 
@@ -101,4 +111,39 @@ function save_edit(id){
             $(".comment-section").html(data)
             // console.log(data)
         })
+}
+
+function edit_subcomment(id){
+    $("#subcomment-"+id).addClass("d-none")
+    $("#edit-subcomment-"+id).removeClass("d-none")
+}
+
+function cancel_edit_sub(id){
+    var my_subcomment = $("#subcomment-"+id).val()
+    $("#edit-subcomment-"+id).val(my_subcomment)
+    $("#subcomment-"+id).removeClass("d-none")
+    $("#edit-subcomment-"+id).addClass("d-none")
+}
+function save_edit_sub(id){
+        console.log(id)
+        var new_subcomment = $("#edit-subcomment-"+id).val()
+        $.ajax({
+            type: "POST",
+            url: "/" + id + "/subcomment/edit",
+            data: { new_subcomment: new_subcomment }
+        }).done( function(data){
+            $(".comment-section-sub").html(data)
+            // console.log(data)
+        })
+}
+
+function delete_sub(id){
+    console.log(1)
+    $.ajax({
+        type:"POST",
+        url: "/subcomment/" + id + "/delete/",
+    }).done( function(data){
+        $(".comment-section-sub").html(data)
+        console.log(data)
+    })
 }

@@ -421,16 +421,6 @@ def edit_comment(comment_id):
         db.session.commit()
         comments = Comment.query.filter_by(pytweet_id=comment.pytweet_id).order_by(Comment.updated_at.desc()).all()
         return render_template('pytweet/comments.html', comments=comments)
-    
-
-        
-
-
-
-
-
-
-
 
 @app.route('/comment/<int:comment_id>/favorite', methods=['POST', 'DELETE'])
 def like_comment(comment_id):
@@ -463,11 +453,51 @@ def new_subcomment(comment_id):
         db.session.add(subcommenting)
         db.session.commit()
         subcomments = SubComment.query.filter_by(comment_id=comment_id).order_by(SubComment.updated_at.desc()).all()
-        return render_template('pytweet/subcomments.html', subcomments=subcomments)
+    
+    return render_template('pytweet/subcomments.html', subcomments=subcomments)
 
-@app.route('/subcomments/<int:subcomment_id>/edit/', methods=['GET', 'POST'])
+@app.route('/<int:subcomment_id>/subcomment/edit', methods=['GET', 'POST'])
 @login_required
 def edit_subcomment(subcomment_id):
+    subcomment = SubComment.query.get(subcomment_id)
+    if subcomment is None:
+        response = jsonify({'status': 'Not Found'})
+        response.status_code = 404
+        return response
+
+    if request.method == 'POST':
+        subcomment.subcomment = request.form['new_subcomment']
+        db.session.commit()
+        subcomments = SubComment.query.filter_by(comment_id=subcomment.comment_id).order_by(SubComment.updated_at.desc()).all()
+        return render_template('pytweet/subcomments.html', subcomments=subcomments)
+
+
+#show subcomments
+@app.route('/comments/<int:comment_id>/sub/', methods=['GET', 'POST'])
+@login_required
+def show_sub_comments(comment_id):
+    subcomments = SubComment.query.filter_by(comment_id=comment_id).order_by(SubComment.updated_at.desc()).all()
+    return render_template("pytweet/subcomments.html", subcomments=subcomments)
+
+@app.route('/comment/<int:comment_id>/delete/', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    comment = Comment.query.get(comment_id)
+
+    if comment is None:
+        response = jsonify({'status': 'Not Found'})
+        response.status_code = 404
+        return response
+
+    db.session.delete(comment)
+    db.session.commit()
+    flash('The pytweet was successfully deleted')
+    comments = Comment.query.filter_by(pytweet_id=comment.pytweet_id).order_by(Comment.updated_at.desc()).all()
+    return render_template("pytweet/comments.html", comments=comments)
+
+@app.route('/subcomment/<int:subcomment_id>/delete/', methods=['POST'])
+@login_required
+def delete_subcomment(subcomment_id):
     subcomment = SubComment.query.get(subcomment_id)
 
     if subcomment is None:
@@ -475,16 +505,9 @@ def edit_subcomment(subcomment_id):
         response.status_code = 404
         return response
 
-    if request.method == 'POST':
-
-        SubComment.subcomment = request.form['subcomment']
-        db.session.commit()
-        return render_template('comments.html')
-
-#show subcomments
-@app.route('/comments/<int:comment_id>/sub/', methods=['GET', 'POST'])
-@login_required
-def show_sub_comments(comment_id):
-    subcomments = SubComment.query.filter_by(comment_id=comment_id).order_by(SubComment.updated_at.desc()).all()
+    db.session.delete(subcomment)
+    db.session.commit()
+    flash('The pytweet was successfully deleted')
+    subcomments = SubComment.query.filter_by(comment_id=subcomment.comment_id).order_by(SubComment.updated_at.desc()).all()
     return render_template("pytweet/subcomments.html", subcomments=subcomments)
 
